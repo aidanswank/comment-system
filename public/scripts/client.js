@@ -8,9 +8,107 @@ function itsWorking(){
     console.log("WOW CRAXYZZYY")
 }
 
+async function getNumReplies(id)
+{
+    var obj = {};
+    obj.id = id;
+
+    let rawdata = await fetch(`${API_URL+"get-num-replies"}`,
+    {
+        method: 'POST',
+        body: JSON.stringify(obj),
+        headers: {
+          'content-type': 'application/json'
+        }
+    }
+        );
+
+    let jsondata = await rawdata.json();
+
+    return jsondata;
+}
+
+async function getReplies(id)
+{
+    var obj = {};
+    obj.id = id;
+    console.log(obj)
+
+    var mydata = fetch(`${API_URL+"get-replies"}`,
+    {
+        method: 'POST',
+        body: JSON.stringify(obj),
+        headers: {
+            'content-type': 'application/json'
+        }
+    });
+
+    // var myjsondata = await mydata.json();
+
+    // console.log(jsondata)
+
+    return mydata;
+}
+
+
+// //snippet
+// getNumReplies("62868036888f946c5822573c")
+// .then(result => {
+//     console.log(result);
+// });
+
+function appendPost(parent,data)
+{
+
+    var contents = makePost(data);
+
+    parent.appendChild(contents);
+}
+
+function makePost(data)
+{
+    var ul = document.createElement('ul');
+    var li = document.createElement('li');
+    li.textContent = data.content+" ";
+
+    var a = document.createElement('a');
+    var linkText = document.createTextNode("[reply]");
+    a.appendChild(linkText);
+    a.id = "replybutton_" + data._id;
+
+    li.appendChild(a);
+
+    const replyform = document.createElement('form');
+    replyform.id = "replyform_"+data._id;
+    
+    const textarea = document.createElement('textarea');
+    //i guess it has to be name not id to retrive val
+    textarea.name = "content";
+    const submitbutton = document.createElement('button');
+    submitbutton.textContent = "submit";
+    replyform.appendChild(textarea);
+    replyform.appendChild(document.createElement('br'));
+    replyform.appendChild(submitbutton);
+    replyform.style.display = "none";
+
+    li.appendChild(document.createElement('br'));
+    li.appendChild(replyform);
+
+    ul.appendChild(li);
+
+    // var data = {}
+    // data._id = "idk";
+    // data.content = "idk";
+    // ul.appendChild(makePost(data));
+
+    // console.log(li)
+
+    return ul;
+}
+
 function listAllPosts()
 {
-    posts_area.innerHTML = '';
+    // posts_area.innerHTML = '';
     fetch(`${API_URL+"get-posts"}`)
     .then(response => response.json())
     .then(result => {
@@ -44,9 +142,47 @@ function listAllPosts()
             contents.appendChild(document.createElement('br'));
             contents.appendChild(replyform);
 
+            // var contents = makePost(result[i]);
+
+
+            //snippet
+            // console.log(result[i]._id);
+            // var id = result[i]._id;
+            function makeMe(id, c)
+            {
+                getNumReplies(id)
+                .then(reply_data => {
+                    if(reply_data.count!=0)
+                    {
+                        console.log(reply_data);
+                        getReplies(reply_data.id)
+                        .then(response => response.json())
+                        .then(replies => {
+                            console.log(replies);
+                            for(var i = 0; i < replies.length; i++)
+                            {
+                                var data = {}
+                                data._id = replies[i]._id;
+                                data.content = replies[i].content;
+                                // appendPost(contents,data);
+                                var contents2 = makePost(data);
+                                
+                                makeMe(replies[i]._id, contents2);
+                                
+                                c.appendChild(contents2);
+                                
+                            }
+                        });
+                    }
+                });
+            }
+            makeMe(result[i]._id, contents);
+            
+
             posts_area.appendChild(contents);
 
-            console.log(posts_area);
+
+            // console.log(posts_area);
 
             // document.getElementById(replyforum.id).addEventListener('click', itsWorking)
         }

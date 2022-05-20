@@ -30,6 +30,19 @@ app.get("/",function(req, res){
     res.render("home"); 
 });
 
+app.post("/get-num-replies", (req, res) => {
+    console.log("get-num-replies request.fields",req.fields);
+    
+    Post.find({ reply_to: req.fields.id })
+    .count(function(err, count){
+        console.log("Number of docs: ", count );
+        var obj = {}
+        obj.count = count;
+        obj.id = req.fields.id;
+        res.json(obj);
+    });
+});
+
 app.get('/get-posts', (req, res) => {
     // console.log(req.fields)
     Post.find({})
@@ -43,6 +56,21 @@ app.get('/get-posts', (req, res) => {
         res.json(docs);
     });
 });
+
+app.post('/get-replies', (req, res) => {
+    console.log(req.fields)
+    Post.find({ reply_to: req.fields.id })
+    .sort({ "_id": 1 })
+    // .skip(request.fields.startFrom)
+    // .limit(request.fields.limit)
+    .exec(function (err, docs) {
+        // docs are plain javascript objects instead of model instances
+        console.log(docs);
+        // send the response back as JSON
+        res.json(docs);
+    });
+});
+
 
 app.post('/make-post', (req, res) => {
     console.log(req.fields);
