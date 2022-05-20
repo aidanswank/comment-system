@@ -26,6 +26,24 @@ app.use(express.static(__dirname + '/public'));
 app.use(cors());
 app.use(formidableMiddleware());
 
+// security help
+app.use(helmet());
+app.use(helmet.contentSecurityPolicy());
+app.use(helmet.crossOriginEmbedderPolicy());
+app.use(helmet.crossOriginOpenerPolicy());
+app.use(helmet.crossOriginResourcePolicy());
+app.use(helmet.dnsPrefetchControl());
+app.use(helmet.expectCt());
+app.use(helmet.frameguard());
+app.use(helmet.hidePoweredBy());
+app.use(helmet.hsts());
+app.use(helmet.ieNoOpen());
+app.use(helmet.noSniff());
+app.use(helmet.originAgentCluster());
+app.use(helmet.permittedCrossDomainPolicies());
+app.use(helmet.referrerPolicy());
+app.use(helmet.xssFilter());
+
 app.get("/",function(req, res){
     res.render("home"); 
 });
@@ -45,7 +63,7 @@ app.post("/get-num-replies", (req, res) => {
 
 app.get('/get-posts', (req, res) => {
     // console.log(req.fields)
-    Post.find({})
+    Post.find({ reply_to: null })
     .sort({ "_id": 1 })
     // .skip(request.fields.startFrom)
     // .limit(request.fields.limit)

@@ -1,0 +1,12 @@
+body {
+    background-image: url("wolfbg.png");
+    /* background-color: #cccccc; */
+    
+    background-repeat: no-repeat;
+    background-position: 100% 0%;
+}
+
+.myform {
+    width: 50%;
+    margin: 0 auto;
+  }

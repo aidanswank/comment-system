@@ -75,6 +75,7 @@ function makePost(data)
     var linkText = document.createTextNode("[reply]");
     a.appendChild(linkText);
     a.id = "replybutton_" + data._id;
+    a.href = "javascript:void(0);";//fake
 
     li.appendChild(a);
 
@@ -106,6 +107,36 @@ function makePost(data)
     return ul;
 }
 
+
+function makeMe(id, c)
+{
+    getNumReplies(id)
+    .then(reply_data => {
+        if(reply_data.count!=0)
+        {
+            console.log(reply_data);
+            getReplies(reply_data.id)
+            .then(response => response.json())
+            .then(replies => {
+                console.log(replies);
+                for(var i = 0; i < replies.length; i++)
+                {
+                    var data = {}
+                    data._id = replies[i]._id;
+                    data.content = replies[i].content;
+                    // appendPost(contents,data);
+                    var contents2 = makePost(data);
+                    
+                    makeMe(replies[i]._id, contents2);
+                    
+                    c.appendChild(contents2);
+                    
+                }
+            });
+        }
+    });
+}
+
 function listAllPosts()
 {
     // posts_area.innerHTML = '';
@@ -116,7 +147,9 @@ function listAllPosts()
         console.log(result);
         for(var i = 0; i < result.length; i++)
         {
-            const contents = document.createElement('li');
+            var hr = document.createElement('hr')
+
+            const contents = document.createElement('p');
             contents.textContent = result[i].content+" ";
 
             var a = document.createElement('a');
@@ -148,38 +181,10 @@ function listAllPosts()
             //snippet
             // console.log(result[i]._id);
             // var id = result[i]._id;
-            function makeMe(id, c)
-            {
-                getNumReplies(id)
-                .then(reply_data => {
-                    if(reply_data.count!=0)
-                    {
-                        console.log(reply_data);
-                        getReplies(reply_data.id)
-                        .then(response => response.json())
-                        .then(replies => {
-                            console.log(replies);
-                            for(var i = 0; i < replies.length; i++)
-                            {
-                                var data = {}
-                                data._id = replies[i]._id;
-                                data.content = replies[i].content;
-                                // appendPost(contents,data);
-                                var contents2 = makePost(data);
-                                
-                                makeMe(replies[i]._id, contents2);
-                                
-                                c.appendChild(contents2);
-                                
-                            }
-                        });
-                    }
-                });
-            }
+  
             makeMe(result[i]._id, contents);
-            
-
-            posts_area.appendChild(contents);
+            hr.append(contents);
+            posts_area.appendChild(hr);
 
 
             // console.log(posts_area);
