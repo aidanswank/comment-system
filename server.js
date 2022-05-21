@@ -64,7 +64,7 @@ app.post("/get-num-replies", (req, res) => {
 app.get('/get-posts', (req, res) => {
     // console.log(req.fields)
     Post.find({ reply_to: null })
-    .sort({ "_id": 1 })
+    .sort({ "_id": -1 })
     // .skip(request.fields.startFrom)
     // .limit(request.fields.limit)
     .exec(function (err, docs) {

@@ -1,12 +1,74 @@
 body {
     background-image: url("wolfbg.png");
     /* background-color: #cccccc; */
-    
+    /* font-smooth: never; */
+/* -webkit-font-smoothing : none; */
     background-repeat: no-repeat;
-    background-position: 100% 0%;
+    background-position: 100% 100%;
+    background-attachment: fixed;
+
+    margin: 0;
+    padding: 0;
+
 }
 
-.myform {
+/* .myform {
     width: 50%;
     margin: 0 auto;
-  }
+} */
+
+/* .posts {
+    margin: 0;
+    padding: 10;
+} */
+
+ul:hover {
+    color: #2693ff;
+}
+
+.postArea {
+    background: rgba(51, 170, 51, .1);
+    border-style:dotted;
+    /* border-spacing: 15px; */
+    padding: 10px 10px;
+    margin: 8 8;
+    width: fit-content;
+    /* or full width */
+    /* width: auto; */ 
+    /* display: block; */
+}
+
+ul {
+    /* padding: 0px 4vw; */
+    padding-top: 0px;
+}
+
+p {
+    display: inline
+}
+
+/* unvisited link */
+a:link {
+    color: red;
+}
+
+/* visited link */
+a:visited {
+    color: green;
+}
+
+/* mouse over link */
+a:hover {
+    color: hotpink;
+}
+
+/* selected link */
+a:active {
+    color: blue;
+}
+
+div.mylittlefooter
+{
+    text-align: right; 
+    /* font-size: 60px; */
+}

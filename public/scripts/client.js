@@ -72,12 +72,15 @@ function makePost(data)
     li.textContent = data.content+" ";
 
     var a = document.createElement('a');
-    var linkText = document.createTextNode("[reply]");
+    var linkText = document.createTextNode("reply");
     a.appendChild(linkText);
+    console.log(linkText);
     a.id = "replybutton_" + data._id;
     a.href = "javascript:void(0);";//fake
 
-    li.appendChild(a);
+    li.append("[")
+        li.appendChild(a);
+    li.append("]")
 
     const replyform = document.createElement('form');
     replyform.id = "replyform_"+data._id;
@@ -148,16 +151,24 @@ function listAllPosts()
         for(var i = 0; i < result.length; i++)
         {
             var hr = document.createElement('hr')
+            const contents = document.createElement('div');
+            // contents.insertBefore(hr,contents.nextSibling);
 
-            const contents = document.createElement('p');
-            contents.textContent = result[i].content+" ";
+            contents.classList.add('postArea');
+
+            var p = document.createElement('p');
+
+            // contents.insertBefore(hr,contents);
+            p.textContent = result[i].content+" ";
+
+            contents.appendChild(p);
 
             var a = document.createElement('a');
             var linkText = document.createTextNode("[reply]");
             a.appendChild(linkText);
             a.id = "replybutton_" + result[i]._id;
 
-            contents.appendChild(a);
+            p.appendChild(a);
 
             const replyform = document.createElement('form');
             replyform.id = "replyform_"+result[i]._id;
@@ -168,23 +179,23 @@ function listAllPosts()
             const submitbutton = document.createElement('button');
             submitbutton.textContent = "submit";
             replyform.appendChild(textarea);
-            replyform.appendChild(document.createElement('br'));
+            // replyform.appendChild(document.createElement('br'));
             replyform.appendChild(submitbutton);
             replyform.style.display = "none";
 
-            contents.appendChild(document.createElement('br'));
             contents.appendChild(replyform);
-
+            
             // var contents = makePost(result[i]);
-
-
+            
+            
             //snippet
             // console.log(result[i]._id);
             // var id = result[i]._id;
-  
+            
             makeMe(result[i]._id, contents);
-            hr.append(contents);
-            posts_area.appendChild(hr);
+            // hr.append(contents);
+            posts_area.appendChild(contents);
+            // posts_area.appendChild(document.createElement('br'));
 
 
             // console.log(posts_area);
