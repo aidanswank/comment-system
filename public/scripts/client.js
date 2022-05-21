@@ -72,9 +72,28 @@ function makePost(data)
     a.id = "replybutton_" + data._id;
     a.href = "javascript:void(0);";//fake
 
-    li.append("[")
-        li.appendChild(a);
-    li.append("]")
+    var a2 = document.createElement('a');
+    var linkText2 = document.createTextNode("delete");
+    a2.appendChild(linkText2);
+    // console.log(linkText);
+    a2.id = "deletebutton_" + data._id;
+    a2.href = "javascript:void(0);";//fake
+
+    
+    var span_options = document.createElement('span');
+    span_options.id = "options_"+data._id;
+    span_options.style = "display:none; float:right;"
+
+    span_options.append("[");
+    span_options.append(a);
+    span_options.append("]");
+
+
+    span_options.append("[");
+    span_options.append(a2);
+    span_options.append("]");
+
+    li.append(span_options);
 
     const replyform = document.createElement('form');
     replyform.id = "replyform_"+data._id;
@@ -235,6 +254,28 @@ function refreshReplies(post_id)
 }
 
 // submit event delegation
+posts_area.addEventListener("mouseover", function(event)
+{
+    const targetID = event.target.id;
+    var arr = targetID.split("_");
+    // console.log(arr[1]);
+    var element = document.getElementById("options_"+arr[1]);
+    element.style = "display: inline; float:right;";
+    var postlist = document.getElementById("postlist_"+arr[1]);
+    postlist.style = "background-color: rgba(0,0,0,0.1);";
+});
+
+posts_area.addEventListener("mouseout", function(event)
+{
+    const targetID = event.target.id;
+    var arr = targetID.split("_");
+    // console.log(arr[1]);
+    var element = document.getElementById("options_"+arr[1]);
+    element.style = "display: none;";
+    var postlist = document.getElementById("postlist_"+arr[1]);
+    postlist.style = "background-color: rgba(0,0,0,0.0);";
+});
+
 posts_area.addEventListener("submit", function(event)
 {
     event.preventDefault();
@@ -249,6 +290,7 @@ posts_area.addEventListener("submit", function(event)
     const name = "aidan";
     const content = formData.get('content');
     const reply_to = arr[1];
+    
     // console.log(content);
     if (name.trim() && content.trim()) {
         var mypost = {name,content,reply_to}
@@ -268,6 +310,8 @@ posts_area.addEventListener("submit", function(event)
             // console.log(thread);
             // recursiveDelete(arr[1]);
             // document.getElementById("postlist_"+arr[1]);
+
+            showHide("replyform_"+arr[1]);
             
             getReplies(arr[1])
             .then(response => response.json())
