@@ -8,7 +8,7 @@ const formidableMiddleware = require('express-formidable');
 // var validator = require('validator');
 
 var Post = require("./models/Post");
-var Reply = require("./models/Reply");
+// var Reply = require("./models/Reply");
 
 mongoose.connect('mongodb://127.0.0.1:27017/myboard',{
     useNewUrlParser: true, 
@@ -78,7 +78,7 @@ app.get('/get-posts', (req, res) => {
 app.post('/get-replies', (req, res) => {
     console.log(req.fields)
     Post.find({ reply_to: req.fields.id })
-    .sort({ "_id": 1 })
+    .sort({ "_id": -1 })
     // .skip(request.fields.startFrom)
     // .limit(request.fields.limit)
     .exec(function (err, docs) {

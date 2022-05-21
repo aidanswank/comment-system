@@ -22,26 +22,41 @@ body {
     padding: 10;
 } */
 
-ul:hover {
+/* ul:hover {
     color: #2693ff;
-}
+} */
 
 .postArea {
-    background: rgba(51, 170, 51, .1);
+    background: rgba(0,0,0, .4);
+
     border-style:dotted;
     /* border-spacing: 15px; */
     padding: 10px 10px;
-    margin: 8 8;
-    width: fit-content;
+    margin: 12 12;
+    color: white;
+    /* width: fit-content; */
     /* or full width */
-    /* width: auto; */ 
+    width: auto; 
     /* display: block; */
 }
 
 ul {
     /* padding: 0px 4vw; */
-    padding-top: 0px;
+    list-style: none; /* Remove default bullets */
+
+    /* padding-top: 0px; */
+    /* list-style-type: georgian; */
+    /* color: red; */
 }
+
+ul li::before {
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: greenyellow; /* Change the color */
+    font-weight: bold; /* If you want it to be bold */
+    display: inline-block; /* Needed to add space between the bullet and the text */
+    width: 1em; /* Also needed for space (tweak if needed) */
+    margin-left: -1em; /* Also needed for space (tweak if needed) */
+  }
 
 p {
     display: inline
@@ -49,7 +64,7 @@ p {
 
 /* unvisited link */
 a:link {
-    color: red;
+    color: blue;
 }
 
 /* visited link */

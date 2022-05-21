@@ -6,7 +6,7 @@ const posts_area = document.getElementById('posts');
 
 function itsWorking(){
     console.log("WOW CRAXYZZYY")
-}
+}  
 
 async function getNumReplies(id)
 {
@@ -32,7 +32,7 @@ async function getReplies(id)
 {
     var obj = {};
     obj.id = id;
-    console.log(obj)
+    // console.log(obj)
 
     var mydata = fetch(`${API_URL+"get-replies"}`,
     {
@@ -57,24 +57,18 @@ async function getReplies(id)
 //     console.log(result);
 // });
 
-function appendPost(parent,data)
-{
-
-    var contents = makePost(data);
-
-    parent.appendChild(contents);
-}
-
 function makePost(data)
 {
     var ul = document.createElement('ul');
+    ul.id = "yuel_" + data._id;
     var li = document.createElement('li');
+    li.id = "postlist_" + data._id;
     li.textContent = data.content+" ";
 
     var a = document.createElement('a');
     var linkText = document.createTextNode("reply");
     a.appendChild(linkText);
-    console.log(linkText);
+    // console.log(linkText);
     a.id = "replybutton_" + data._id;
     a.href = "javascript:void(0);";//fake
 
@@ -117,11 +111,11 @@ function makeMe(id, c)
     .then(reply_data => {
         if(reply_data.count!=0)
         {
-            console.log(reply_data);
+            // console.log(reply_data);
             getReplies(reply_data.id)
-            .then(response => response.json())
+            .then(response => response.json()) // -___-
             .then(replies => {
-                console.log(replies);
+                // console.log(replies);
                 for(var i = 0; i < replies.length; i++)
                 {
                     var data = {}
@@ -130,9 +124,10 @@ function makeMe(id, c)
                     // appendPost(contents,data);
                     var contents2 = makePost(data);
                     
-                    makeMe(replies[i]._id, contents2);
-                    
+                    makeMe(replies[i]._id, contents2); // 0 _ 0 OMg recursive !
+                                
                     c.appendChild(contents2);
+                    // c.insertBefore(contents2,c.nextSibling);
                     
                 }
             });
@@ -191,7 +186,7 @@ function listAllPosts()
             //snippet
             // console.log(result[i]._id);
             // var id = result[i]._id;
-            
+     
             makeMe(result[i]._id, contents);
             // hr.append(contents);
             posts_area.appendChild(contents);
@@ -230,6 +225,15 @@ posts_area.addEventListener("click", function(e)
     }
 });
 
+function refreshReplies(post_id)
+{
+    getReplies(post_id)
+    .then(response => response.json())
+    .then(replies => {
+        console.log(replies);
+    });
+}
+
 // submit event delegation
 posts_area.addEventListener("submit", function(event)
 {
@@ -257,7 +261,33 @@ posts_area.addEventListener("submit", function(event)
             }
           }).then(response => response.json())
           .then(createdContent => {
-              console.log('created',createdContent);
+            console.log('created',createdContent);
+            //   listAllPosts();
+            // refreshReplies(arr[1]);
+            // thread.innerHTML='';
+            // console.log(thread);
+            // recursiveDelete(arr[1]);
+            // document.getElementById("postlist_"+arr[1]);
+            
+            getReplies(arr[1])
+            .then(response => response.json())
+            .then(replies => {
+                console.log(replies);
+                for(var i = 0; i < replies.length; i++)
+                {
+                    var postlisting = document.getElementById("yuel_"+replies[i]._id);
+                    console.log(postlisting);
+                    if(postlisting)
+                    {
+                        postlisting.remove();
+                    }
+                }
+            });
+
+            var postlisting = document.getElementById("postlist_"+arr[1]);
+            makeMe(arr[1],postlisting);
+
+            
           })
     }
 });
