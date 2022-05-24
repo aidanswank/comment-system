@@ -124,8 +124,17 @@ function makePost(data)
 }
 
 
-function makeMe(id, c)
+// Safe guard, so i dont go too deep in the rabbit hole!
+var MAX_DEPTH = 3;
+// post id, html context, recursive depth
+function makeMe(id, c, depth)
 {
+    if(depth > MAX_DEPTH)
+    {
+        console.log("You gone too far!")
+        return;
+    }
+
     getNumReplies(id)
     .then(reply_data => {
         if(reply_data.count!=0)
@@ -143,7 +152,7 @@ function makeMe(id, c)
                     // appendPost(contents,data);
                     var contents2 = makePost(data);
                     
-                    makeMe(replies[i]._id, contents2); // 0 _ 0 OMg recursive !
+                    makeMe(replies[i]._id, contents2, depth+1); // 0 _ 0 OMg recursive !
                                 
                     c.appendChild(contents2);
                     // c.insertBefore(contents2,c.nextSibling);
@@ -206,7 +215,7 @@ function listAllPosts()
             // console.log(result[i]._id);
             // var id = result[i]._id;
      
-            makeMe(result[i]._id, contents);
+            makeMe(result[i]._id, contents, 0);
             // hr.append(contents);
             posts_area.appendChild(contents);
             // posts_area.appendChild(document.createElement('br'));
@@ -244,14 +253,14 @@ posts_area.addEventListener("click", function(e)
     }
 });
 
-function refreshReplies(post_id)
-{
-    getReplies(post_id)
-    .then(response => response.json())
-    .then(replies => {
-        console.log(replies);
-    });
-}
+// function refreshReplies(post_id)
+// {
+//     getReplies(post_id)
+//     .then(response => response.json())
+//     .then(replies => {
+//         console.log(replies);
+//     });
+// }
 
 // submit event delegation
 posts_area.addEventListener("mouseover", function(event)
@@ -259,21 +268,27 @@ posts_area.addEventListener("mouseover", function(event)
     const targetID = event.target.id;
     var arr = targetID.split("_");
     // console.log(arr[1]);
-    var element = document.getElementById("options_"+arr[1]);
-    element.style = "display: inline; float:right;";
-    var postlist = document.getElementById("postlist_"+arr[1]);
-    postlist.style = "background-color: rgba(0,0,0,0.1);";
+    if(arr[0]=="postlist"||arr[0]=="replybutton")
+    {
+        var element = document.getElementById("options_"+arr[1]);
+        element.style = "display: inline; float:right;";
+        var postlist = document.getElementById("postlist_"+arr[1]);
+        postlist.style = "background-color: rgba(0,0,0,0.1);";
+    }
 });
 
 posts_area.addEventListener("mouseout", function(event)
 {
     const targetID = event.target.id;
     var arr = targetID.split("_");
-    // console.log(arr[1]);
-    var element = document.getElementById("options_"+arr[1]);
-    element.style = "display: none;";
-    var postlist = document.getElementById("postlist_"+arr[1]);
-    postlist.style = "background-color: rgba(0,0,0,0.0);";
+    console.log(arr);
+    if(arr[0]=="postlist"||arr[0]=="replybutton")
+    {
+        var element = document.getElementById("options_"+arr[1]);
+        element.style = "display: none;";
+        var postlist = document.getElementById("postlist_"+arr[1]);
+        postlist.style = "background-color: rgba(0,0,0,0.0);";
+    }
 });
 
 posts_area.addEventListener("submit", function(event)
@@ -310,7 +325,8 @@ posts_area.addEventListener("submit", function(event)
             // console.log(thread);
             // recursiveDelete(arr[1]);
             // document.getElementById("postlist_"+arr[1]);
-
+            
+            document.getElementById("replyform_"+arr[1]).value = '';
             showHide("replyform_"+arr[1]);
             
             getReplies(arr[1])
@@ -320,7 +336,7 @@ posts_area.addEventListener("submit", function(event)
                 for(var i = 0; i < replies.length; i++)
                 {
                     var postlisting = document.getElementById("yuel_"+replies[i]._id);
-                    console.log(postlisting);
+                    // console.log(postlisting);
                     if(postlisting)
                     {
                         postlisting.remove();

@@ -29,12 +29,12 @@ body {
 } */
 
 .postArea {
-    background: rgba(232, 225, 211, .3);
+    background: rgba(0, 0, 0, 0.4);
     border-style:dotted;
     /* border-spacing: 15px; */
     padding: 10px 10px;
     margin: 12 12;
-    color: rgba(82, 83, 105,1);
+    color: rgb(255, 255, 255);
     /* width: fit-content; */
     /* or full width */
     width: auto; 
@@ -57,7 +57,7 @@ ul {
 ul li::before {
     
     content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
-    color: rgb(15, 181, 0); /* Change the color */
+    color: rgb(21, 255, 0); /* Change the color */
     font-weight: bold; /* If you want it to be bold */
     display: inline-block; /* Needed to add space between the bullet and the text */
     width: 1em; /* Also needed for space (tweak if needed) */
